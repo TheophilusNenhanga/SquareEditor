@@ -1,22 +1,56 @@
 package jbq061.assignment3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class IModel {
-    private Box selected; // which circle is selected
+	private final ArrayList<Box> selected; // which circle is selected
+	public boolean allSelected;
 
-    public IModel(){
-        selected = null;
-    }
+	public IModel() {
+		selected = new ArrayList<>();
+		allSelected = false;
+	}
 
-    public void select(Box box) {
-        selected = box;
-    }
+	public void select(Box box) {
+		box.select();
+		selected.add(box);
+	}
 
-    public Box getSelected(){
-        return selected;
-    }
+	public ArrayList<Box> getSelected() {
+		return selected;
+	}
 
-    public void unSelect(){
-        this.selected = null;
-    }
+	public void unSelect(Box box) {
+		selected.remove(box);
+		box.unselect();
+	}
+
+
+	public void toggleSelect(Box box) {
+		if (box.isSelected) {
+			unSelect(box);
+		} else {
+			select(box);
+		}
+	}
+
+	public void unselectAll() {
+		selected.forEach(Box::unselect);
+		selected.clear();
+	}
+
+	public void selectAll(ArrayList<Box> boxes) {
+		if (!allSelected) {
+			boxes.forEach(Box::select);
+			this.selected.addAll(boxes);
+			allSelected = true;
+		} else {
+			boxes.forEach(Box::unselect);
+			this.unselectAll();
+			allSelected = false;
+		}
+
+	}
 }
 
