@@ -1,14 +1,27 @@
 package jbq061.assignment3;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class MainUI extends StackPane {
 	private final BoxView view;
 
 	public MainUI() {
-		BoxModel model = new BoxModel();
+		PublishSubscribe publishSubscribe = new PublishSubscribe();
 		view = new BoxView();
-		AppController controller = new AppController();
+		StatusBarView statusView = new StatusBarView();
+
+		publishSubscribe.subscribe("create", view);
+		publishSubscribe.subscribe("delete", view);
+		publishSubscribe.subscribe("update", view);
+		publishSubscribe.subscribe("selection", view);
+
+		publishSubscribe.subscribe("create", statusView);
+		publishSubscribe.subscribe("delete", statusView);
+
+		BoxModel model = new BoxModel();
+		AppController controller = new AppController(publishSubscribe);
 		IModel iModel = new IModel();
 
 		// Linking
@@ -16,7 +29,13 @@ public class MainUI extends StackPane {
 		controller.setModel(model);
 		model.addSubscriber(view);
 		controller.setIModel(iModel);
-		this.getChildren().add(view);
+
+		VBox container = new VBox();
+		container.getChildren().addAll(view, statusView);
+		container.setAlignment(Pos.BOTTOM_LEFT);
+		this.setStyle("-fx-background-color: #004f0a");
+		this.getChildren().add(container);
+
 	}
 
 	public void setFocus() {

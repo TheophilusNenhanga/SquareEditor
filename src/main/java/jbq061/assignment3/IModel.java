@@ -1,7 +1,6 @@
 package jbq061.assignment3;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class IModel {
 	private final ArrayList<Box> selected; // which circle is selected
@@ -28,6 +27,7 @@ public class IModel {
 
 
 	public void toggleSelect(Box box) {
+		if (box == null) return;
 		if (box.isSelected) {
 			unSelect(box);
 		} else {

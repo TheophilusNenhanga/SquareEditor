@@ -1,6 +1,7 @@
 package jbq061.assignment3;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // This model stores all objects
 public class BoxModel {
@@ -8,6 +9,7 @@ public class BoxModel {
 	private final ArrayList<Box> boxes;
 	private int cursorPosition;
 	private Box currentBox;
+
 
 	public BoxModel() {
 		this.subscribers = new ArrayList<>();
@@ -19,18 +21,8 @@ public class BoxModel {
 		subscribers.add(sub);
 	}
 
-	private void notifySubscribers() {
-		// for each subscriber call the model changed method
-		subscribers.forEach(subscriber -> subscriber.modelChanged(boxes));
-	}
-
-	public void somethingChanged() {
-		notifySubscribers();
-	}
-
 	public void addBox(double x, double y, double width, double height) {
 		boxes.add(new Box(x, y, width, height));
-		notifySubscribers();
 	}
 
 	public int getSize() {
@@ -48,22 +40,6 @@ public class BoxModel {
 		this.cursorPosition += 1;
 		this.currentBox = getCursorBox();
 		this.currentBox.setCurrentBox();
-		notifySubscribers();
-
-	}
-
-	public void moveCursorLeft() {
-		if (this.cursorPosition == this.getSize() - 1) {
-			this.currentBox.unsetCurrentBox();
-			this.cursorPosition = -1;
-		}
-		if (cursorPosition != -1) {
-			this.getCursorBox().unsetCurrentBox();
-		}
-		this.cursorPosition -= 1;
-		this.currentBox = getCursorBox();
-		this.currentBox.setCurrentBox();
-		notifySubscribers();
 	}
 
 	public Box getCursorBox() {
@@ -121,7 +97,6 @@ public class BoxModel {
 				cursorPosition = i;
 				this.currentBox = getCursorBox();
 				this.currentBox.setCurrentBox();
-				notifySubscribers();
 			}
 		}
 	}
@@ -133,27 +108,22 @@ public class BoxModel {
 	public void delete(ArrayList<Box> boxesToDelete) {
 		boxesToDelete.forEach(boxes::remove);
 		cursorPosition = -1; // resetting the cursor
-		notifySubscribers();
 	}
 
 	public void moveLeft(ArrayList<Box> boxes) {
 		boxes.forEach(box -> box.setX(box.getX() - 15));
-		notifySubscribers();
 	}
 
 	public void moveRight(ArrayList<Box> boxes) {
 		boxes.forEach(box -> box.setX(box.getX() + 15));
-		notifySubscribers();
 	}
 
 	public void moveUp(ArrayList<Box> boxes) {
 		boxes.forEach(box -> box.setY(box.getY() - 15));
-		notifySubscribers();
 	}
 
 	public void moveDown(ArrayList<Box> boxes) {
 		boxes.forEach(box -> box.setY(box.getY() + 15));
-		notifySubscribers();
 	}
 
 	public void increaseSize(ArrayList<Box> boxes) {
@@ -161,7 +131,6 @@ public class BoxModel {
 			box.setWidth(box.getWidth() + 5);
 			box.setHeight(box.getHeight() + 5);
 		});
-		notifySubscribers();
 	}
 
 
@@ -170,7 +139,6 @@ public class BoxModel {
 			box.setWidth(box.getWidth() - 5);
 			box.setHeight(box.getHeight() - 5);
 		});
-		notifySubscribers();
 	}
 
 	public void alignLeft(Box alignTarget, ArrayList<Box> boxes) {
@@ -182,7 +150,6 @@ public class BoxModel {
 		boxes.forEach(box -> {
 			box.setX(finalAlignTarget.getX());
 		});
-		notifySubscribers();
 	}
 
 	public void alignRight(Box alignTarget, ArrayList<Box> boxes) {
@@ -194,7 +161,6 @@ public class BoxModel {
 		boxes.forEach(box -> {
 			box.setX(finalAlignTarget.getX());
 		});
-		notifySubscribers();
 	}
 
 	public void alignTop(Box alignTarget, ArrayList<Box> boxes) {
@@ -206,7 +172,6 @@ public class BoxModel {
 		boxes.forEach(box -> {
 			box.setY(finalAlignTarget.getY());
 		});
-		notifySubscribers();
 	}
 
 	public void alignBottom(Box alignTarget, ArrayList<Box> boxes) {
@@ -218,7 +183,6 @@ public class BoxModel {
 		boxes.forEach(box -> {
 			box.setY(finalAlignTarget.getY());
 		});
-		notifySubscribers();
 	}
 
 	public Box getLeftmost(ArrayList<Box> boxes) {
@@ -280,32 +244,34 @@ public class BoxModel {
 	}
 
 	public void divideEvenlyHorizontal(ArrayList<Box> boxes) {
+		if (boxes == null || boxes.isEmpty()) {
+			return;
+		}
+
 		Box leftMost = getLeftmost(boxes);
 		Box rightMost = getRightmost(boxes);
 
-		// double areaWidth = rightMost.getX() + rightMost.getWidth() - leftMost.getX();
 		double areaWidth = rightMost.getX() + rightMost.getWidth() - leftMost.getX() + rightMost.getWidth();
 		double parcel = areaWidth / boxes.size();
 
 		for (int i = 0; i < boxes.size(); i++) {
-			// if (boxes.get(i) == leftMost) continue;
 			boxes.get(i).setX(leftMost.getX() + (i * parcel));
 		}
-		notifySubscribers();
 	}
 
 	public void divideEvenlyVertical(ArrayList<Box> boxes) {
+		if (boxes == null || boxes.isEmpty()) {
+			return;
+		}
+
 		Box topMost = getTopmost(boxes);
 		Box bottomMost = getBottommost(boxes);
 
-		// double areaHeight = bottomMost.getX() + bottomMost.getWidth() - topMost.getX();
 		double areaHeight = bottomMost.getY() + bottomMost.getHeight() - topMost.getY() + bottomMost.getHeight();
 		double parcel = areaHeight / boxes.size();
 
 		for (int i = 0; i < boxes.size(); i++) {
-			// if (boxes.get(i) == topMost) continue;
 			boxes.get(i).setY(topMost.getY() + (i * parcel));
 		}
-		notifySubscribers();
 	}
 }

@@ -14,19 +14,15 @@ public class BoxView extends StackPane implements Subscriber {
 
 	public BoxView() {
 		this.canvas = new Canvas(800, 800);
-		this.getChildren().add(canvas);
 		graphicsContext = canvas.getGraphicsContext2D();
+		this.setStyle("-fx-background-color: #004f0a");
+		graphicsContext.setFill(Color.FORESTGREEN);
+		this.getChildren().add(canvas);
 	}
 
 	public void setupEvents(AppController controller) {
 		this.setOnKeyPressed(controller::handleKeyPressed);
 		this.setOnKeyReleased(controller::handleKeyReleased);
-	}
-
-	@Override
-	public void modelChanged(List<Box> boxes) {
-		// whenever the model is changed redraw tha canvas
-		draw(boxes);
 	}
 
 	public void draw(List<Box> boxes) {
@@ -53,4 +49,8 @@ public class BoxView extends StackPane implements Subscriber {
 		}
 	}
 
+	@Override
+	public void receiveNotification(String channelKey, Object changedState) {
+		draw((List<Box>) changedState);
+	}
 }

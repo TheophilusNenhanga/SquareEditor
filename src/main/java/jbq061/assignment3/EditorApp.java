@@ -9,7 +9,7 @@ public class EditorApp extends Application {
 	public void start(Stage stage) {
 		MainUI root = new MainUI();
 		Scene scene = new Scene(root);
-		stage.setTitle("Theophilus Nyasha Nenhanga - Lab 8");
+		stage.setTitle("Theophilus Nyasha Nenhanga - Assignment 3");
 		stage.setScene(scene);
 		stage.show();
 		root.setFocus();
