@@ -3,7 +3,7 @@ package jbq061.assignment3;
 import java.util.ArrayList;
 
 public class IModel {
-	private final ArrayList<Box> selected; // which circle is selected
+	private final ArrayList<Box> selected;
 	public boolean allSelected;
 
 	public IModel() {

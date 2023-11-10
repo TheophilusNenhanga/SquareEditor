@@ -20,10 +20,12 @@ public class AppController {
 		READY, // ready to move into another state
 		CREATE, // The state used when creating boxes
 		DELETE, // The state used when deleting boxes
-		UPDATE // The state used when updating boxes
+		UPDATE,  // The state used when updating boxes
+
+		CONTROL_DOWN // When the control key is down
 	}
 
-	private InteractionState state = InteractionState.READY;
+	private final InteractionState state = InteractionState.READY;
 
 	public void setModel(BoxModel model) {
 		this.model = model;
@@ -34,8 +36,25 @@ public class AppController {
 	}
 
 	public void handleKeyPressed(KeyEvent event) {
+		if (event.isControlDown() && !keyPressed) {
+			this.timeStart = System.currentTimeMillis();
+			keyPressed = true;
+		}
+		if (event.isControlDown() && keyPressed) {
+			long timeEnd = System.currentTimeMillis();
+			long deltaTime = timeEnd - this.timeStart;
+			System.out.println(deltaTime);
+			if (deltaTime >= 1000) {
+				publishSubscribe.publish("update", "show");
+			}
+		}
+	}
+
+	public void handleKeyReleased(KeyEvent event) {
 		switch (this.state) {
 			case READY -> {
+				publishSubscribe.publish("update", "hide");
+
 				if (event.isControlDown() && event.getCode() == KeyCode.C) {
 					double[] position = boxPosition(100, 100);
 					this.model.addBox(position[0], position[1], 50, 50);
@@ -137,13 +156,11 @@ public class AppController {
 					model.divideEvenlyVertical(iModel.getSelected());
 					publishSubscribe.publish("update", model.getBoxes());
 				}
+				if (event.getCode() == KeyCode.CONTROL) {
+					keyPressed = false;
+					publishSubscribe.publish("update", "hide");
+				}
 			}
-		}
-	}
-
-	public void handleKeyReleased(KeyEvent event) {
-		switch (this.state) {
-
 		}
 	}
 
