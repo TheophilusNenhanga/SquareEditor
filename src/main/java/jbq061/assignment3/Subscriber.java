@@ -1,5 +1,5 @@
 package jbq061.assignment3;
 
 public interface Subscriber {
-	void receiveNotification(String channelKey, Object changedState);
+	void receiveNotification(String channelName, Object changedState);
 }

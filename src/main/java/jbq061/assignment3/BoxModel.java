@@ -214,7 +214,11 @@ public class BoxModel {
 		return rightMost;
 	}
 
-
+	/**
+	 * Returns the box closest to the top
+	 * @param boxes The list of boxes to check
+	 * @return Returns the box closest to the top
+	 */
 	public Box getTopmost(ArrayList<Box> boxes) {
 		Box topMost = null;
 		double minDistance = Double.MAX_VALUE;
@@ -229,20 +233,29 @@ public class BoxModel {
 		return topMost;
 	}
 
+	/**
+	 * Gets the box closest to the bottom.
+	 *
+	 * @param boxes The list of boxes to check
+	 * @return The box with the greatest y coordinate
+	 */
 	public Box getBottommost(ArrayList<Box> boxes) {
 		Box bottomMost = null;
 		double maxDistance = Double.MIN_VALUE;
-
 		for (Box box : boxes) {
 			if (box.y > maxDistance) {
 				maxDistance = box.y;
 				bottomMost = box;
 			}
 		}
-
 		return bottomMost;
 	}
 
+	/**
+	 * Divides boxes evenly in the x plane.
+	 *
+	 * @param boxes The list of boxes which must be divided.
+	 */
 	public void divideEvenlyHorizontal(ArrayList<Box> boxes) {
 		if (boxes == null || boxes.isEmpty()) {
 			return;
@@ -259,6 +272,11 @@ public class BoxModel {
 		}
 	}
 
+	/**
+	 * Divides boxes evenly in the y plane.
+	 *
+	 * @param boxes The list of boxes which must be divided.
+	 */
 	public void divideEvenlyVertical(ArrayList<Box> boxes) {
 		if (boxes == null || boxes.isEmpty()) {
 			return;

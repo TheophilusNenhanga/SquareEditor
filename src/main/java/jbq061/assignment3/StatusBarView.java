@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 public class StatusBarView extends HBox implements Subscriber {
 
+	// making use of Properties because they are easier to update when values change.
 	private final IntegerProperty sinceStartProperty;
 	private final IntegerProperty deletedProperty;
 	private final IntegerProperty currentProperty;
@@ -22,6 +23,7 @@ public class StatusBarView extends HBox implements Subscriber {
 		Label deletedLabel = new Label();
 		Label currentLabel = new Label();
 
+		// binding the text property and the integer property, so they update accordingly
 		startLabel.textProperty().bind(Bindings.concat("Created: ", sinceStartProperty, "\t"));
 		deletedLabel.textProperty().bind(Bindings.concat("Deleted: ", deletedProperty, "\t"));
 		currentLabel.textProperty().bind(Bindings.concat("Current: ", currentProperty, "\t"));
@@ -37,15 +39,24 @@ public class StatusBarView extends HBox implements Subscriber {
 	}
 
 	@Override
-	public void receiveNotification(String channelKey, Object changedState) {
-		switch (channelKey) {
+	public void receiveNotification(String channelName, Object changedState) {
+		// changed state is not used
+		switch (channelName) {
 			case "create" -> {
 				sinceStartProperty.set(sinceStartProperty.get() + 1);
 				currentProperty.set(currentProperty.get() + 1);
+				// To prevent a bug
+				if (currentProperty.get() < 0){
+					currentProperty.set(sinceStartProperty.get() - deletedProperty.get());
+				}
 			}
 			case "delete" -> {
 				currentProperty.set(currentProperty.get() - 1);
 				deletedProperty.set(deletedProperty.get() + 1);
+				// To prevent a bug
+				if (currentProperty.get() < 0){
+					currentProperty.set(sinceStartProperty.get() - deletedProperty.get());
+				}
 			}
 		}
 	}

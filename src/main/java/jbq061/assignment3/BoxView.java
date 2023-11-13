@@ -54,7 +54,7 @@ public class BoxView extends StackPane implements Subscriber {
 	}
 
 	@Override
-	public void receiveNotification(String channelKey, Object changedState) {
+	public void receiveNotification(String channelName, Object changedState) {
 		if (changedState instanceof String stateString) {
 			if (stateString.equals("show")) {
 				// show the guide

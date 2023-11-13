@@ -11,12 +11,12 @@ public class MainUI extends StackPane {
 		PublishSubscribe publishSubscribe = new PublishSubscribe();
 		view = new BoxView();
 		StatusBarView statusView = new StatusBarView();
-
+		// BoxView subscriptions
 		publishSubscribe.subscribe("create", view);
 		publishSubscribe.subscribe("delete", view);
 		publishSubscribe.subscribe("update", view);
 		publishSubscribe.subscribe("selection", view);
-
+		// statusView subscriptions
 		publishSubscribe.subscribe("create", statusView);
 		publishSubscribe.subscribe("delete", statusView);
 
